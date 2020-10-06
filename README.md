@@ -15,4 +15,6 @@ npm run dev
 ### Notas: 
 1. Es importante ejecutar primero este repositorio, antes de ejecutar el repositorio del Frontend.
 
-2. Este repositorio corre en el puerto ```localhost:4000```
+2. Este repositorio corre en el puerto ```localhost:4000```.
+
+3. El motor de base de datos utilizado en esta prueba es mysql y el script se encuentra en este mismo repositorio con el nombre de ```prueba_data_base.sql```
