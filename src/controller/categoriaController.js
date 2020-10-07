@@ -104,7 +104,7 @@ function editarCategoria(req, res) {
             if (error) {
                 console.log(error);
                 res.status(500).send({
-                    mensaje: 'Error al editar la categoria dsdd',
+                    mensaje: 'Error al editar la categoria',
                     result: false
                 });
             } else {

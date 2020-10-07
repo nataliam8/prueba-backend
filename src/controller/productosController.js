@@ -126,9 +126,18 @@ function guardarProducto(req, res) {
                                     result: false
                                 });
                             } else {
-                                    res.status(200).send({
+                                   /* res.status(200).send({
                                     mensaje: 'Se agregó el producto exitosamente',
                                     result: true
+                                    
+                                });*/
+                                conexion.query('SELECT * FROM productos where id=?', [resultData.insertId], function (error, results, fields) {
+                                    
+                                    res.status(200).send({
+                                        mensaje: 'Se agregó el producto exitosamente',
+                                        result: true,
+                                        data: results[0]
+                                    });
                                 });
                             }
                         }
@@ -146,29 +155,55 @@ function guardarProducto(req, res) {
 function editarProducto(req,res){
     const {id,nombre,idCategoria,precio,cantidad} = req.body;
 
-    conexion.query('UPDATE productos SET nombre=?, idCategoria=?, precio=?,cantidad=? WHERE id=?',
-    [nombre, idCategoria, precio, cantidad, id], function (error, resultData, fieldData) {
-        if (error) {
-            res.status(500).send({
-                mensaje: 'Error al editar el producto',
-                result: false
-            });
-        } else {
-            if (!resultData) {
+    console.log('id: ',id);
+    console.log('nombre: ',nombre);
+    console.log('categoria: ',idCategoria);
+    console.log('precio:', precio);
+    console.log('cantidad: ', cantidad);
 
-                res.status(404).send({
-                    mensage: 'No se logró editar el producto',
+    conexion.query('SELECT * FROM productos WHERE nombre=? AND idCategoria=? AND id !=?',
+        [nombre, idCategoria, id], function (error, resultData, fieldData) {
+
+            if (error) {
+                console.log(error);
+                res.status(500).send({
+                    mensaje: 'Error al editar producto',
                     result: false
                 });
             } else {
-                    res.status(200).send({
-                    mensaje: 'Se edito el producto exitosamente',
-                    result: true
-                });
-            }
-        }      
-    });
+                
+                if (resultData[0] === undefined) {
 
+                    conexion.query('UPDATE productos SET nombre=?, idCategoria=?, precio=?,cantidad=? WHERE id=?',
+                    [nombre, idCategoria, precio, cantidad, id], function (error, resultData, fieldData) {
+                        if (error) {
+                            res.status(500).send({
+                                mensaje: 'Error al editar el producto',
+                                result: false
+                            });
+                        } else {
+                            if (!resultData) {
+
+                                res.status(404).send({
+                                    mensage: 'No se logró editar el producto',
+                                    result: false
+                                });
+                            } else {
+                                    res.status(200).send({
+                                    mensaje: 'Se edito el producto exitosamente',
+                                    result: true
+                                });
+                            }
+                        }      
+                    });
+                }else {
+                    res.status(200).send({
+                        mensaje: 'Ya existe un producto con este nombre',
+                        result: false
+                    });
+                }   
+            }
+        });           
 
 }
 
